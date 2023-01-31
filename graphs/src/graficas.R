@@ -9,8 +9,8 @@ if(!require(pacman)) install.packages("pacman")
 pacman::p_load(tidyverse, here, ggplot2, ggalt, zoo, lubridate)
 options(scipen=999)
 
-files <- list(data = "/Users/georginajimenez92/Documents/GitHub/calidad_aire/import-clean/output/base_calidad.rds",
-              tema = "/Users/georginajimenez92/Documents/GitHub/calidad_aire/graphs/src/theme.R")
+files <- list(data = here("import-clean/output/base_calidad.rds"),
+              tema = here("graphs/src/theme.R"))
 
 data <- readRDS(files$data)
 
@@ -19,6 +19,9 @@ source(files$tema)
 
 #### Gráficas sobre días de calidad del aire
 data%>%
+mutate(yearmon=as.yearmon(fecha))%>%
+group_by(yearmon)%>%
+summarize()
 group_by(quart)%>%
 summarize(repm10=sum(repm10, na.rm=T))%>%
 ungroup()%>%
@@ -60,6 +63,18 @@ data%>%
   summarize(renitro=sum(renitro, na.rm=T))%>%
   ungroup()%>%
   ggplot(aes(x=quart, y=renitro))+
+  geom_line()+
+  geom_point()+
+  tema+
+  labs(title="Número de días en los que el nitrógeno superó el límite recomendado",
+       subtitle="Por trimestre del año")
+
+
+data%>%
+  group_by(quart)%>%
+  summarize(repm25=sum(repm25, na.rm=T))%>%
+  ungroup()%>%
+  ggplot(aes(x=quart, y=repm25))+
   geom_line()+
   geom_point()+
   tema+

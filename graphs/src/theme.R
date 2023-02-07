@@ -24,12 +24,12 @@ tema <- theme_bw() +
 pal <-  c("#61304B","#857C8D","#94BFBE", "#acf7c1")
 
 save <- function(name){
-  ggsave(paste0(here("descriptives/out/"), name, ".png"), width = 12, height = 8)
-  ggsave(paste0(here("descriptives/out/"), name, ".svg"), width = 12, height = 8)
+  ggsave(paste0(here("graphs/out/"), name, ".png"), width = 12, height = 8)
+  ggsave(paste0(here("graphs/out/"), name, ".svg"), width = 12, height = 8)
 }
 
 
-caption <- "Source: Epidemiological Bulletin, Mexico's Health Secretariat 2020, 2021 and 2022"
+caption <- "Source: Air Quality Mexico City http://www.aire.cdmx.gob.mx/"
 
 
 # done.

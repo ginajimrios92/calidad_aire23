@@ -4,7 +4,7 @@
 # Calidad del aire, Enero 2023
 
 library("pacman")
-p_load(tidyverse, foreign, janitor, here, zoo, lubridate)
+p_load(tidyverse, foreign, janitor, here, zoo, lubridate, matrixStats)
 
 #### Funciones ####
 mas_cero <- function(x){
@@ -180,7 +180,9 @@ for (i in 6:10) {
 
 data <- left_join(data_pm10, data_pm25)%>%
         left_join(., data_so2)%>%
-        pivot_longer(2:4, names_to="contaminante", values_to="total")
+        pivot_longer(2:4, names_to="contaminante", values_to="total")%>%
+        mutate(contaminante=gsub("max_", "", contaminante),
+               contaminante=str_to_title(contaminante))
 
 rm(data_pm10, data_pm25, data_so2)
 

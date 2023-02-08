@@ -11,6 +11,7 @@ options(scipen=999)
 
 files <- list(data_calidad = here("import-clean/output/base_calidad.rds"),
               data_promedios = here("import-clean/output/base_promedios.rds"),
+              data_row=here("import-clean/output/base2023.rds"),
               tema = here("graphs/src/theme.R"))
 #### Tema  ####
 source(files$tema)
@@ -173,3 +174,59 @@ labs(title="Promedio de dióxido de azufre en el aire",
    labs(title="Mediana de PM10 en el aire",
         subtitle="Por año", caption=caption, y="", x="Año")
  save("Median_PM25")
+ 
+ 
+ 
+ 
+ #### Gráficas de enero y diciembre ####
+ data <- readRDS(files$data_row)
+ 
+ data%>%
+   mutate(year=year(fecha),
+          mes=month(fecha))%>%
+   filter(mes==1)%>%
+   group_by(year, contaminante)%>%
+   summarize(promedio=mean(total, na.rm=T))%>%
+   filter(contaminante!="Pm10")%>%
+   ggplot(aes(x=as.factor(year), y=promedio, fill=contaminante))+
+   geom_bar(stat="identity", position="dodge")+
+   scale_fill_manual(values=pal)+
+   tema+
+   labs(title="Máximos promedio de SO2 y PM2.5", 
+          subtitle="En enero de cada año",
+          caption=caption, y="", x="Año", fill="")
+ save("Máximos en enero-1")
+ 
+ 
+ 
+ data%>%
+   mutate(year=year(fecha),
+          mes=month(fecha))%>%
+   filter(mes==1)%>%
+   group_by(year, contaminante)%>%
+   summarize(promedio=mean(total, na.rm=T))%>%
+   filter(contaminante=="Pm10")%>%
+   ggplot(aes(x=as.factor(year), y=promedio))+
+   geom_bar(stat="identity", position="dodge", fill=pal[3])+
+   tema+
+   labs(title="Máximos promedio de PM10", 
+        subtitle="En enero de cada año",
+        caption=caption, y="", x="Año", fill="")
+ save("Máximos en enero-2")
+ 
+ 
+ 
+ data%>%
+   mutate(year=year(fecha),
+          mes=month(fecha))%>%
+   filter(mes==12)%>%
+   group_by(year, contaminante)%>%
+   summarize(promedio=mean(total, na.rm=T))%>%
+   ggplot(aes(x=as.factor(year), y=promedio, fill=contaminante))+
+   geom_bar(stat="identity", position="dodge")+
+   scale_fill_manual(values=pal)+
+   tema+
+   labs(title="Máximos promedio de cada contaminante", 
+        subtitle="En enero de cada año",
+        caption=caption, y="", x="Año", fill="")
+ save("Máximos en diciembre")
